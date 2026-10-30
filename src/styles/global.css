@@ -1,0 +1,415 @@
+:root {
+  --color-primary: #4f8dff;
+  --color-primary-strong: #2563eb;
+  --color-primary-soft: rgba(79, 141, 255, 0.16);
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-danger-strong: #ef4444;
+
+  /* 毛玻璃层级（加深模糊与高光，强化高级玻璃质感） */
+  --glass-bg: rgba(22, 32, 56, 0.4);
+  --glass-bg-strong: rgba(12, 19, 37, 0.62);
+  --glass-blur: 44px;
+  --glass-blur-strong: 52px;
+  --glass-border: rgba(255, 255, 255, 0.11);
+  --glass-highlight: rgba(255, 255, 255, 0.12);
+  --inner-bg: rgba(255, 255, 255, 0.045);
+  --inner-bg-hover: rgba(255, 255, 255, 0.08);
+  --input-bg: rgba(5, 9, 20, 0.45);
+  --input-border: rgba(255, 255, 255, 0.1);
+
+  --text-primary: #f3f6fc;
+  --text-secondary: #9fb0cc;
+  --text-placeholder: #5e6f8c;
+  --divider: rgba(255, 255, 255, 0.07);
+
+  --radius-lg: 16px;
+  --radius-card: 10px;
+  --radius-control: 7px;
+
+  --font-ui: 'Inter', -apple-system, 'SF Pro Text', 'PingFang SC', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Menlo', 'Consolas', monospace;
+
+  --shadow-glass: 0 28px 70px -20px rgba(0, 0, 0, 0.68), 0 2px 12px -6px rgba(28, 74, 170, 0.22),
+    inset 0 1px 0 var(--glass-highlight), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  --shadow-pop: 0 16px 44px -10px rgba(0, 0, 0, 0.68), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-primary: 0 8px 22px -5px rgba(37, 99, 235, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  /* 深蓝网格光晕背景，作为毛玻璃后景 */
+  background:
+    radial-gradient(1100px 720px at 10% -12%, rgba(56, 118, 255, 0.30), transparent 62%),
+    radial-gradient(900px 640px at 108% -4%, rgba(124, 92, 255, 0.18), transparent 58%),
+    radial-gradient(1000px 820px at 52% 118%, rgba(20, 158, 233, 0.16), transparent 60%),
+    linear-gradient(180deg, #080d1f 0%, #0a1124 55%, #090e1e 100%);
+  background-attachment: fixed;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-control);
+  transition: background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease,
+    transform 0.12s ease;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0.5px);
+}
+
+button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-primary);
+  border-radius: var(--radius-control);
+  padding: 6px 9px;
+  font-size: 12.5px;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.28);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-placeholder);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(79, 141, 255, 0.7);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25), 0 0 0 3px rgba(79, 141, 255, 0.18);
+}
+
+select {
+  cursor: pointer;
+}
+
+select option {
+  background: #131c31;
+  color: var(--text-primary);
+}
+
+/* ---------------- 毛玻璃面板 ---------------- */
+
+.glass {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+  border-radius: var(--radius-lg);
+}
+
+/* 玻璃顶部反光棱边：强化「有厚度的玻璃」质感（backdrop-filter 已形成层叠上下文，负层级保证压在内容之下） */
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02) 22%, transparent 42%);
+  pointer-events: none;
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(200%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-pop);
+}
+
+.panel {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(calc(var(--glass-blur) - 4px)) saturate(185%);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) - 4px)) saturate(185%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), 0 12px 36px -20px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), transparent 26%);
+  pointer-events: none;
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hint {
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+
+/* Monaco 粘性滚动头部：强悬浮感——大深投影 + 毛玻璃透亮底 + 顶部高光 + 圆角卡片 */
+.sticky-widget {
+  background: rgba(30, 54, 100, 0.82) !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  border-radius: 8px !important;
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.65),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 -1px 0 rgba(79, 141, 255, 0.35) inset !important;
+}
+
+/* ---------------- 按钮体系 ---------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  background: var(--inner-bg);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-control);
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--inner-bg-hover);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #5a97ff 0%, #2f6ff0 100%);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: var(--shadow-primary);
+  font-weight: 600;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #6ba3ff 0%, #3b7af5 100%);
+}
+
+.btn-danger {
+  background: linear-gradient(180deg, #fb7c7c 0%, #e24848 100%);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 16px -5px rgba(239, 68, 68, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  font-weight: 600;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fc8a8a 0%, #ef5353 100%);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--inner-bg);
+  color: var(--text-primary);
+}
+
+/* 图标按钮 */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 26px;
+  min-width: 26px;
+  padding: 0 8px;
+  border-radius: var(--radius-control);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background: var(--inner-bg-hover);
+  color: var(--text-primary);
+}
+
+/* ---------------- 滚动条 ---------------- */
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.26);
+  background-clip: padding-box;
+}
+
+/* ---------------- 进度条 ---------------- */
+
+.progress-track {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+  transition: width 0.2s ease;
+  /* 底层渐变 + 上层斜纹，斜纹持续流动表达「正在工作」 */
+  background-image: linear-gradient(45deg,
+      rgba(255, 255, 255, 0.22) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.22) 50%,
+      rgba(255, 255, 255, 0.22) 75%,
+      transparent 75%),
+    linear-gradient(90deg, #34d399, #4f8dff);
+  background-size: 16px 16px, 100% 100%;
+  animation: progress-stripes 0.7s linear infinite;
+}
+
+@keyframes progress-stripes {
+  from {
+    background-position: 0 0, 0 0;
+  }
+
+  to {
+    background-position: 16px 0, 0 0;
+  }
+}
+
+/* iOS 风分段控件 */
+.segmented {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: rgba(5, 9, 20, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ---------------- 动效体系 ---------------- */
+
+/* 三栏入场：错峰上浮，首屏即有生命感（仅 transform / opacity，保证 60fps） */
+@keyframes shell-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.994);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.shell-col {
+  animation: shell-rise 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.shell-col:nth-child(2) {
+  animation-delay: 0.04s;
+}
+
+.shell-col:nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+.shell-col:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+/* 主按钮：hover 时一道微光扫过 */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
+}
+
+.btn-primary:hover:not(:disabled)::after {
+  animation: btn-sheen 0.85s ease;
+}
+
+@keyframes btn-sheen {
+  to {
+    left: 130%;
+  }
+}
+
+/* 系统设置开启「减少动态效果」时关闭全部装饰性动画 */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
