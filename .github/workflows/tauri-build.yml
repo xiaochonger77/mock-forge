@@ -1,9 +1,14 @@
 name: Build Tauri App
 on:
   push:
-    branches: [ main ]  # 你的主分支名，如果是master就改成master
+    branches: [ main ]
   pull_request:
     branches: [ main ]
+
+# ========== 加上这一段！重点 ==========
+permissions:
+  contents: write
+# ===================================
 
 jobs:
   build:
@@ -22,11 +27,14 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: 淘宝npm镜像
+        run: npm config set registry https://registry.npmmirror.com
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Build Tauri
         uses: tauri-apps/tauri-action@v0
@@ -34,7 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: app-v__VERSION__
-          releaseName: DataSimulator v__VERSION__
+          releaseName: MockForge v__VERSION__
           releaseBody: '自动打包构建，Windows和Mac安装包'
           releaseDraft: true
           prerelease: false
